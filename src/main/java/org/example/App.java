@@ -14,36 +14,38 @@ public class App
         DecimalFormat f = new DecimalFormat("#0.00####");
         Scanner scanner = new Scanner(System.in);
         int maleOrFemale;
-        float ouncesAlcohol, weight, hoursSinceLastDrink, alcoholDistributionRatio, bloodAlcoholContent;
-        String currentInput;
+        float ouncesAlcohol = 0, weight=0, hoursSinceLastDrink=0, alcoholDistributionRatio = 0, bloodAlcoholContent;
+        String outputText;
 
-        System.out.println( "Enter a 1 if you are male or a 2 if you are female: " );
-        currentInput = scanner.nextLine();
-        try{
-            maleOrFemale = Integer.parseInt(currentInput);}
-        catch (NumberFormatException nfe){
-            System.out.println( "Input must be numeric" );
-            return;
+        for (int i = 0; i < 4; i++) {
+            switch (i) {
+                case 0:
+                    outputText = "Enter a 1 if you are male or a 2 if you are female: ";
+                    maleOrFemale = Integer.parseInt(CheckIfValidInput(scanner, outputText));
+                    if(maleOrFemale == 1)
+                        alcoholDistributionRatio = 0.73f;
+                    else if (maleOrFemale == 2)
+                        alcoholDistributionRatio = 0.66f;
+                    else
+                    {
+                        System.out.println( "Invalid input: Must be 1 or 2" );
+                        return;
+                    }
+                    break;
+                case 1:
+                    outputText = "How many ounces of alcohol did you have? ";
+                    ouncesAlcohol = Float.parseFloat(CheckIfValidInput(scanner, outputText));
+                    break;
+                case 2:
+                    outputText = "What is your weight in pounds? ";
+                    weight = Float.parseFloat(CheckIfValidInput(scanner, outputText));
+                    break;
+                case 3:
+                    outputText = "How many hours has it been since your last drink? ";
+                    hoursSinceLastDrink = Float.parseFloat(CheckIfValidInput(scanner, outputText));
+                    break;
+            }
         }
-
-        if(maleOrFemale == 1)
-            alcoholDistributionRatio = 0.73f;
-        else if (maleOrFemale == 2)
-            alcoholDistributionRatio = 0.66f;
-        else
-        {
-            System.out.println( "Invalid Input" );
-            return;
-        }
-
-        System.out.println( "How many ounces of alcohol did you have? " );
-        ouncesAlcohol = scanner.nextFloat();
-
-        System.out.println( "What is your weight in pounds? " );
-        weight = scanner.nextFloat();
-
-        System.out.println( "How many hours has it been since your last drink? " );
-        hoursSinceLastDrink = scanner.nextFloat();
 
         bloodAlcoholContent = (ouncesAlcohol * 5.14f / weight * alcoholDistributionRatio) - .015f * hoursSinceLastDrink;
 
@@ -54,5 +56,20 @@ public class App
         System.out.println(endString);
 
         scanner.close();
+    }
+
+    public static String CheckIfValidInput(Scanner s, String output)
+    {
+        while(true) {
+            System.out.println(output);
+            String currentInput = s.nextLine();
+            try {
+                Float.parseFloat(currentInput);
+            } catch (NumberFormatException nfe) {
+                System.out.println("Input must be numeric");
+                continue;
+            }
+            return currentInput;
+        }
     }
 }
